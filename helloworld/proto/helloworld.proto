@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package helloworld;
+option go_package="mygo/helloworld/proto";
+
+service Greeter{
+  // 一元调用
+    rpc SayHello(HelloRequest) returns(HelloReplay){}
+  //客户端流，上传文件场景
+  rpc SayHelloClientStream(stream HelloRequest) returns(HelloReplay){}
+  //服务端流，下载文件场景
+  rpc SayHelloServerStream(HelloRequest) returns (stream HelloReplay){}
+  //双向流，机器人客服场景 一问一答
+  rpc SayHelloTwoWayStream(HelloRequest) returns (stream HelloReplay){}
+}
+
+enum Gender{
+  FEMALE=0;
+  MALE=1;
+}
+
+message  HelloRequest{
+  string name =1 ;
+  Gender gender=2;
+  uint32 age=3;
+  uint64 birthday=4;
+  Address addr =7;
+}
+
+message  Address{
+  string province =1 ;
+  string city =2 ;
+}
+message HelloReplay{
+  string msg=1;
+}
+
+/**
+
+
+ protoc --go_out=. --go_opt=paths=source_relative \
+    --go-grpc_out=. --go-grpc_opt=paths=source_relative \
+    helloworld/proto/helloworld.proto
+
+**/
